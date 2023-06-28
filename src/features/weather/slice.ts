@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { LoadingState, WeatherSliceState } from "./types";
+import { fetchWeatherByCoords } from "./api";
 
 // Define the initial state using that type
 const initialState: WeatherSliceState = {
@@ -19,6 +20,12 @@ export const weatherSlice = createSlice({
     setGeopositionAccess: (state, action: PayloadAction<boolean>) => {
       state.hasGeopositionAccess = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchWeatherByCoords.pending, (state, action) => {
+      // both `state` and `action` are now correctly typed
+      // based on the slice state and the `pending` action creator
+    });
   },
 });
 

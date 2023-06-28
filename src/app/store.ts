@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import {
   FLUSH,
   PAUSE,
@@ -6,14 +6,29 @@ import {
   PURGE,
   REGISTER,
   REHYDRATE,
+  persistReducer,
   persistStore,
 } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 import { weatherSlice } from "../features/weather/slice";
 
+const reducers = combineReducers({
+  weather: weatherSlice.reducer,
+});
+
+const persistConfig = {
+  key: "root",
+  storage,
+};
+
+const persistedReducer = persistReducer(persistConfig, reducers);
+
 export const store = configureStore({
-  reducer: {
-    weather: weatherSlice.reducer,
-  },
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
