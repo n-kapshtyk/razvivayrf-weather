@@ -1,11 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { LoadingState, WeatherSliceState } from "./types";
+import {
+  LoadingState,
+  PositionCoords,
+  SavedWeatherPosition,
+  WeatherSliceState,
+} from "./types";
 import { fetchWeatherByCoords } from "./api";
 
-// Define the initial state using that type
 const initialState: WeatherSliceState = {
-  activeCoords: null,
+  activePosition: null,
   hasGeopositionAccess: false,
   loadingState: LoadingState.idle,
   savedPositions: [],
@@ -14,21 +18,32 @@ const initialState: WeatherSliceState = {
 
 export const weatherSlice = createSlice({
   name: "weather",
-  // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
     setGeopositionAccess: (state, action: PayloadAction<boolean>) => {
       state.hasGeopositionAccess = action.payload;
     },
+    setActivePosition: (
+      state,
+      action: PayloadAction<SavedWeatherPosition | PositionCoords | null>
+    ) => {
+      state.activePosition = action.payload;
+    },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchWeatherByCoords.pending, (state, action) => {
-      // both `state` and `action` are now correctly typed
-      // based on the slice state and the `pending` action creator
+    builder.addCase(fetchWeatherByCoords.pending, (state) => {
+      state.loadingState = LoadingState.loading;
+    });
+    builder.addCase(fetchWeatherByCoords.fulfilled, (state, action) => {
+      state.loadingState = LoadingState.success;
+      state.weatherData = action.payload;
+    });
+    builder.addCase(fetchWeatherByCoords.rejected, (state) => {
+      state.loadingState = LoadingState.error;
     });
   },
 });
 
-export const { setGeopositionAccess } = weatherSlice.actions;
+export const { setGeopositionAccess, setActivePosition } = weatherSlice.actions;
 
 export default weatherSlice.reducer;

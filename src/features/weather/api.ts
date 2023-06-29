@@ -5,10 +5,10 @@ export const fetchWeatherByCoords = createAsyncThunk(
   "weather/fetchWeatherByCoords",
   async (coords: PositionCoords) => {
     const response = await fetch(
-      `https://api.weather.yandex.ru/v2/forecast?lat=${coords.lat}&lon=${coords.lon}&lang=ru_RU&hours=false&extra=false`,
+      `/weather?lat=${coords.lat}&lon=${coords.lon}&lang=ru_RU&hours=false&extra=false`,
       {
         headers: {
-          "X-Yandex-API-Key": "",
+          "X-Yandex-API-Key": import.meta.env.VITE_YANDEX_API_KEY,
         },
       }
     );

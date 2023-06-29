@@ -118,7 +118,7 @@ export interface SavedWeatherPosition {
 
 export interface WeatherSliceState {
   hasGeopositionAccess: boolean;
-  activeCoords: PositionCoords | null;
+  activePosition: SavedWeatherPosition | PositionCoords | null;
   weatherData: WeatherData | null;
   savedPositions: SavedWeatherPosition[];
   loadingState: LoadingState;
