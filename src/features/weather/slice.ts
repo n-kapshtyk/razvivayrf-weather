@@ -10,6 +10,7 @@ import { fetchWeatherByCoords } from "./api";
 
 const initialState: WeatherSliceState = {
   activePosition: null,
+  currentUserPosition: null,
   hasGeopositionAccess: false,
   loadingState: LoadingState.idle,
   savedPositions: [],
@@ -29,6 +30,12 @@ export const weatherSlice = createSlice({
     ) => {
       state.activePosition = action.payload;
     },
+    setCurrentPosition: (
+      state,
+      action: PayloadAction<PositionCoords | null>
+    ) => {
+      state.currentUserPosition = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchWeatherByCoords.pending, (state) => {
@@ -44,6 +51,7 @@ export const weatherSlice = createSlice({
   },
 });
 
-export const { setGeopositionAccess, setActivePosition } = weatherSlice.actions;
+export const { setGeopositionAccess, setActivePosition, setCurrentPosition } =
+  weatherSlice.actions;
 
 export default weatherSlice.reducer;

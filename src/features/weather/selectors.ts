@@ -5,3 +5,12 @@ export const selectHasGeopositionAccess = (state: RootState) =>
 
 export const selectWeatherLoadingState = (state: RootState) =>
   state.weather.loadingState;
+
+export const selectWeatherData = (state: RootState) =>
+  state.weather.weatherData;
+
+export const selectActivePosition = (state: RootState) =>
+  state.weather.activePosition;
+
+export const selectSavedPositions = (state: RootState) =>
+  state.weather.savedPositions;

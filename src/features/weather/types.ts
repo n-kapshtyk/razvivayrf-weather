@@ -41,7 +41,7 @@ interface WeatherDataHour {
   cloudness: number;
 }
 
-interface WeatherDataForecast {
+export interface WeatherDataForecast {
   date: string;
   date_ts: number;
   week: number;
@@ -90,12 +90,23 @@ interface WeatherDataInfo {
   url: string;
 }
 
+enum WeatherDataGetObjectNames {
+  district = "district",
+  locality = "locality",
+  province = "province",
+  country = "country",
+}
+interface WeatherDataGeoObject {
+  id: number;
+  name: string;
+}
 export interface WeatherData {
   now: number;
   now_dt: string;
   info: WeatherDataInfo;
   fact: WeatherDataFact;
   forecasts: WeatherDataForecast[];
+  geo_object: Record<WeatherDataGetObjectNames, WeatherDataGeoObject>;
 }
 
 export enum LoadingState {
@@ -119,6 +130,7 @@ export interface SavedWeatherPosition {
 export interface WeatherSliceState {
   hasGeopositionAccess: boolean;
   activePosition: SavedWeatherPosition | PositionCoords | null;
+  currentUserPosition: PositionCoords | null;
   weatherData: WeatherData | null;
   savedPositions: SavedWeatherPosition[];
   loadingState: LoadingState;

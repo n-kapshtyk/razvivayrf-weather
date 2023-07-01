@@ -10,7 +10,7 @@ export default defineConfig({
         target: "https://api.weather.yandex.ru/v2/forecast",
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/weather2/, ""),
+        rewrite: (path) => path.replace(/^\/weather/, ""),
       },
     },
   },

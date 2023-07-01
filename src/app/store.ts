@@ -3,19 +3,18 @@ import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { weatherSlice } from "../features/weather/slice";
 
-const reducers = combineReducers({
-  weather: weatherSlice.reducer,
-});
-
-const persistConfig = {
-  key: "root",
+const weatherConfig = {
+  key: "weather",
   storage,
+  blacklist: ["activePosition", "weatherData", "loadingState"],
 };
 
-const persistedReducer = persistReducer(persistConfig, reducers);
+const reducer = combineReducers({
+  weather: persistReducer(weatherConfig, weatherSlice.reducer),
+});
 
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
