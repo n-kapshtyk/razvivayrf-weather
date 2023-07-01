@@ -1,0 +1,5 @@
+{
+    "rewrites": [
+        { "source": "/weather", "destination": "https://api.weather.yandex.ru/v2/forecast" }
+    ]
+}
