@@ -12,5 +12,8 @@ export const selectWeatherData = (state: RootState) =>
 export const selectActivePosition = (state: RootState) =>
   state.weather.activePosition;
 
+export const selectCurrentUserPosition = (state: RootState) =>
+  state.weather.currentUserPosition;
+
 export const selectSavedPositions = (state: RootState) =>
   state.weather.savedPositions;

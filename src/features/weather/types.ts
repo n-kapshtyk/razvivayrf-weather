@@ -122,7 +122,7 @@ export interface PositionCoords {
 }
 
 export interface SavedWeatherPosition {
-  id: string;
+  id: number;
   name: string;
   coords: PositionCoords;
 }

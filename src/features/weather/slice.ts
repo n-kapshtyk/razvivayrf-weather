@@ -36,6 +36,9 @@ export const weatherSlice = createSlice({
     ) => {
       state.currentUserPosition = action.payload;
     },
+    savePosition: (state, action: PayloadAction<SavedWeatherPosition>) => {
+      state.savedPositions.push(action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchWeatherByCoords.pending, (state) => {
@@ -51,7 +54,11 @@ export const weatherSlice = createSlice({
   },
 });
 
-export const { setGeopositionAccess, setActivePosition, setCurrentPosition } =
-  weatherSlice.actions;
+export const {
+  setGeopositionAccess,
+  setActivePosition,
+  setCurrentPosition,
+  savePosition,
+} = weatherSlice.actions;
 
 export default weatherSlice.reducer;
