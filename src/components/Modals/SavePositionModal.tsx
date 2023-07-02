@@ -7,6 +7,7 @@ import {
   setActivePosition,
   updatePositionName,
 } from "../../features/weather/slice";
+import { locales } from "../../locales";
 
 interface SavePositionModalProps {
   initialName: string;
@@ -49,7 +50,7 @@ export function SavePositionModal({
 
   return (
     <Modal
-      title="Cохранить позицию"
+      title={locales.savePositionModal.title}
       open={true}
       closable={true}
       onCancel={() => setIsOpenSaveModal(false)}
@@ -69,7 +70,7 @@ export function SavePositionModal({
         layout="vertical"
       >
         <Form.Item
-          label="Название"
+          label={locales.savePositionModal.input}
           name="positionName"
           rules={[{ required: true, message: "" }]}
           initialValue={initialName}
@@ -77,7 +78,7 @@ export function SavePositionModal({
           <Input className="!w-full" />
         </Form.Item>
         <Button type="primary" htmlType="submit">
-          Сохранить
+          {locales.savePositionModal.button}
         </Button>
       </Form>
     </Modal>

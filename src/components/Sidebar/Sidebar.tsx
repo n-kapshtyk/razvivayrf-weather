@@ -7,6 +7,7 @@ import { selectHasGeopositionAccess } from "../../features/weather/selectors";
 import { AddPositionModal } from "../Modals/AddPositionModal";
 import { useSidebar } from "../../hooks/useSidebar";
 import { MenuItemType } from "antd/es/menu/hooks/useItems";
+import { locales } from "../../locales";
 
 export function Sidebar() {
   const hasAccess = useAppSelector(selectHasGeopositionAccess);
@@ -15,11 +16,7 @@ export function Sidebar() {
     useSidebar();
 
   return (
-    <Sider
-      breakpoint="lg"
-      collapsedWidth="0"
-      /* className="flex flex-col items-center space-y-4 overflow-x-hidden overflow-y-auto h-full fixed left-0 top-0 bottom-0" */
-    >
+    <Sider breakpoint="lg" collapsedWidth="0">
       <div className="flex justify-center py-4">
         <img className="h-14" src={logo} alt="Logo" />
       </div>
@@ -32,7 +29,7 @@ export function Sidebar() {
                 setIsOpenAddModal(true);
               }}
             >
-              Новое местоположение
+              {locales.newPositionButton}
             </Button>
           </div>
 

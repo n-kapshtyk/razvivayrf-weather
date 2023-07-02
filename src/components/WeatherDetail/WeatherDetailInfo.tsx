@@ -7,7 +7,7 @@ import {
 } from "../../features/weather/selectors";
 import { Button } from "antd";
 import { SavePositionModal } from "../Modals/SavePositionModal";
-import { weatherConditionsLocales } from "../../locales";
+import { locales, weatherConditionsLocales } from "../../locales";
 import {
   removeSavedPosition,
   setActivePosition,
@@ -49,11 +49,13 @@ export function WeatherDetailInfo() {
         <div className="flex items-center">
           {isSaved && (
             <Button danger={true} onClick={removeSavedHandler} className="mr-2">
-              Удалить
+              {locales.weather.buttons.remove}
             </Button>
           )}
           <Button onClick={() => setIsOpenSaveModal(true)}>
-            {isSaved ? "Изменить" : "Сохранить"}
+            {isSaved
+              ? locales.weather.buttons.update
+              : locales.weather.buttons.save}
           </Button>
         </div>
       </div>
@@ -65,15 +67,15 @@ export function WeatherDetailInfo() {
       )}
       <ul className="text-lg">
         <WeatherDetailInfoItem
-          name="Место"
+          name={locales.weather.info.place}
           value={`${geo_object.country.name}, ${geo_object.locality.name}`}
         />
         <WeatherDetailInfoItem
-          name="Широта и долгота"
+          name={locales.weather.info.coords}
           value={`${info.lat} / ${info.lon}`}
         />
         <WeatherDetailInfoItem
-          name="Местное время"
+          name={locales.weather.info.time}
           value={`${new Intl.DateTimeFormat("ru", {
             year: "2-digit",
             month: "2-digit",
@@ -82,24 +84,30 @@ export function WeatherDetailInfo() {
             minute: "2-digit",
           }).format(new Date(now_dt))}`}
         />
-        <WeatherDetailInfoItem name="Температура" value={`${fact.temp}℃`} />
         <WeatherDetailInfoItem
-          name="Температура (ощущается)"
+          name={locales.weather.info.temp}
+          value={`${fact.temp}℃`}
+        />
+        <WeatherDetailInfoItem
+          name={locales.weather.info.tempFeels}
           value={`${fact.feels_like}℃`}
         />
         <WeatherDetailInfoItem
-          name="Описание"
+          name={locales.weather.info.condition}
           value={`${weatherConditionsLocales[fact.condition]}`}
         />
         <WeatherDetailInfoItem
-          name="Скорость ветра"
+          name={locales.weather.info.windSpeed}
           value={`${fact.wind_speed}м/c`}
         />
         <WeatherDetailInfoItem
-          name="Атмосферное давление"
+          name={locales.weather.info.pressure}
           value={`${fact.pressure_mm}мм рт.ст.`}
         />
-        <WeatherDetailInfoItem name="Влажность" value={`${fact.humidity}%`} />
+        <WeatherDetailInfoItem
+          name={locales.weather.info.humidity}
+          value={`${fact.humidity}%`}
+        />
       </ul>
     </div>
   );

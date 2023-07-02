@@ -1,6 +1,6 @@
 import React from "react";
 import { WeatherDataForecast } from "../../features/weather/types";
-import { weatherConditionsLocales } from "../../locales";
+import { locales, weatherConditionsLocales } from "../../locales";
 
 interface WeatherDetailDayInfoProps {
   forecast: WeatherDataForecast;
@@ -12,35 +12,35 @@ export function WeatherDetailDayInfo({ forecast }: WeatherDetailDayInfoProps) {
   return (
     <div>
       <WeatherDetailDayInfoItem
-        name="Минимальная температура"
+        name={locales.weather.dayInfo.minTemp}
         value={`${dayInfo.temp_min}℃`}
       />
       <WeatherDetailDayInfoItem
-        name="Максимальная температура"
+        name={locales.weather.dayInfo.maxTemp}
         value={`${dayInfo.temp_max}℃`}
       />
       <WeatherDetailDayInfoItem
-        name="Cредняя температура"
+        name={locales.weather.dayInfo.avgTemp}
         value={`${dayInfo.temp_avg}℃`}
       />
       <WeatherDetailDayInfoItem
-        name="Температура (ощущается)"
+        name={locales.weather.dayInfo.tempFeels}
         value={`${dayInfo.feels_like}℃`}
       />{" "}
       <WeatherDetailDayInfoItem
-        name="Описание"
+        name={locales.weather.dayInfo.condition}
         value={`${weatherConditionsLocales[dayInfo.condition]}`}
       />
       <WeatherDetailDayInfoItem
-        name="Скорость ветра"
+        name={locales.weather.dayInfo.windSpeed}
         value={`${dayInfo.wind_speed}м/c`}
       />
       <WeatherDetailDayInfoItem
-        name="Атмосферное давление"
+        name={locales.weather.dayInfo.pressure}
         value={`${dayInfo.pressure_mm}мм рт.ст.`}
       />
       <WeatherDetailDayInfoItem
-        name="Влажность"
+        name={locales.weather.dayInfo.humidity}
         value={`${dayInfo.humidity}%`}
       />
     </div>

@@ -1,11 +1,12 @@
 import { Modal } from "antd";
 import React, { useState } from "react";
+import { locales } from "../../locales";
 
 export function LoadingErrorModal() {
   const [isOpen, setIsOpen] = useState(true);
   return (
     <Modal
-      title="Ошибка загрузки данных"
+      title={locales.loadingErrorModal.title}
       open={isOpen}
       centered={true}
       cancelButtonProps={{
@@ -17,10 +18,7 @@ export function LoadingErrorModal() {
       closable={true}
       onCancel={() => setIsOpen(false)}
     >
-      <p>
-        Не удалось загрузить данные по выбранной геопозиции. Пожалуйста,
-        попробуйте заново
-      </p>
+      <p>{locales.loadingErrorModal.text}</p>
     </Modal>
   );
 }

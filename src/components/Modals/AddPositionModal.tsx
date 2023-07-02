@@ -4,6 +4,7 @@ import { useAppDispatch } from "../../app/hooks";
 import { fetchWeatherByCoords } from "../../features/weather/api";
 import { PositionCoords } from "../../features/weather/types";
 import { setActivePosition } from "../../features/weather/slice";
+import { locales } from "../../locales";
 
 interface AddPositionModalProps {
   setIsOpenAddModal: Dispatch<SetStateAction<boolean>>;
@@ -27,7 +28,7 @@ export function AddPositionModal({ setIsOpenAddModal }: AddPositionModalProps) {
 
   return (
     <Modal
-      title="Поиск по координатам"
+      title={locales.addPosition.title}
       open={true}
       closable={true}
       onCancel={() => setIsOpenAddModal(false)}
@@ -47,14 +48,14 @@ export function AddPositionModal({ setIsOpenAddModal }: AddPositionModalProps) {
         layout="vertical"
       >
         <Form.Item
-          label="Широта"
+          label={locales.addPosition.lat}
           name="lat"
           rules={[{ required: true, message: "" }]}
         >
           <InputNumber<string> stringMode className="!w-full" />
         </Form.Item>
         <Form.Item
-          label="Долгота"
+          label={locales.addPosition.lon}
           name="lon"
           rules={[{ required: true, message: "" }]}
         >
@@ -62,7 +63,7 @@ export function AddPositionModal({ setIsOpenAddModal }: AddPositionModalProps) {
         </Form.Item>
 
         <Button type="primary" htmlType="submit">
-          Поиск
+          {locales.addPosition.button}
         </Button>
       </Form>
     </Modal>
