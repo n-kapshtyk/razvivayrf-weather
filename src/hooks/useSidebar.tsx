@@ -128,17 +128,16 @@ function getActiveSearchMenuItem({
   if (
     !activePosition ||
     !getIsNoSavedPosition(activePosition) ||
-    !currentUserPosition
+    !currentUserPosition ||
+    (activePosition.lat === currentUserPosition.lat &&
+      activePosition.lon === currentUserPosition.lon)
   ) {
     return [];
   }
-  return activePosition.lat !== currentUserPosition?.lat &&
-    activePosition.lon !== currentUserPosition?.lon
-    ? [
-        {
-          key: `${activePosition.lat}${activePosition.lon}`,
-          label: `${activePosition.lat} / ${activePosition.lon}`,
-        },
-      ]
-    : [];
+  return [
+    {
+      key: `${activePosition.lat}${activePosition.lon}`,
+      label: `${activePosition.lat} / ${activePosition.lon}`,
+    },
+  ];
 }
