@@ -19,11 +19,5 @@ export function WeatherDetailDays() {
     }));
   }, [weatherData]);
 
-  return (
-    <Tabs
-      defaultActiveKey="1"
-      items={items}
-      onChange={(tab: string) => console.log("tab", tab)}
-    />
-  );
+  return <Tabs defaultActiveKey={items[0].key} items={items} />;
 }

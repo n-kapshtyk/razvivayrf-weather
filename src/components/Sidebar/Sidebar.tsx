@@ -3,36 +3,29 @@ import Sider from "antd/es/layout/Sider";
 import React from "react";
 import logo from "../../assets/weather.svg";
 import { useAppSelector } from "../../app/hooks";
-import {
-  selectHasGeopositionAccess,
-  selectSavedPositions,
-} from "../../features/weather/selectors";
+import { selectHasGeopositionAccess } from "../../features/weather/selectors";
 import { AddPositionModal } from "../Modals/AddPositionModal";
 import { useSidebar } from "../../hooks/useSidebar";
+import { MenuItemType } from "antd/es/menu/hooks/useItems";
 
 export function Sidebar() {
   const hasAccess = useAppSelector(selectHasGeopositionAccess);
-  const savedPositions = useAppSelector(selectSavedPositions);
 
-  const {
-    activeId,
-    isOpenAddModal,
-    setCurrentPositionAsActive,
-    setIsOpenAddModal,
-  } = useSidebar();
+  const { activeId, isOpenAddModal, menuItems, setIsOpenAddModal } =
+    useSidebar();
 
   return (
     <Sider
       breakpoint="lg"
       collapsedWidth="0"
-      className="flex flex-col items-center space-y-2 overflow-auto h-screen fixed left-0 top-0 bottom-0"
+      /* className="flex flex-col items-center space-y-4 overflow-x-hidden overflow-y-auto h-full fixed left-0 top-0 bottom-0" */
     >
       <div className="flex justify-center py-4">
         <img className="h-14" src={logo} alt="Logo" />
       </div>
       {hasAccess && (
         <>
-          <div className="text-center">
+          <div className="text-center py-3">
             <Button
               ghost
               onClick={() => {
@@ -49,21 +42,7 @@ export function Sidebar() {
             defaultSelectedKeys={["current"]}
             selectedKeys={[String(activeId)]}
             className="py-4"
-            items={[
-              {
-                key: "current",
-                label: "Текущая позиция",
-                onClick: setCurrentPositionAsActive,
-              },
-              {
-                key: "saved",
-                label: "Сохраненные",
-                children: savedPositions.map((position) => ({
-                  key: String(position.id),
-                  label: position.name,
-                })),
-              },
-            ]}
+            items={menuItems as MenuItemType[]}
           />
         </>
       )}

@@ -7,8 +7,8 @@ interface WeatherDetailDayInfoProps {
 }
 
 export function WeatherDetailDayInfo({ forecast }: WeatherDetailDayInfoProps) {
-  console.log("forecast", forecast);
   const dayInfo = forecast.parts["day"];
+
   return (
     <div>
       <WeatherDetailDayInfoItem

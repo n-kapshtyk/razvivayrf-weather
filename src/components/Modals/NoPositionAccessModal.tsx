@@ -12,10 +12,10 @@ export function NoPositionAccessModal() {
       open={!hasAccess}
       centered={true}
       cancelButtonProps={{
-        hidden: true,
+        className: "!hidden",
       }}
       okButtonProps={{
-        hidden: true,
+        className: "!hidden",
       }}
     >
       <p>

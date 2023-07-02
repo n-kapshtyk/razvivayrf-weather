@@ -1,28 +1,61 @@
 import React, { useState } from "react";
-import { useAppSelector } from "../../app/hooks";
-import { selectWeatherData } from "../../features/weather/selectors";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {
+  selectActivePosition,
+  selectCurrentUserPosition,
+  selectWeatherData,
+} from "../../features/weather/selectors";
 import { Button } from "antd";
 import { SavePositionModal } from "../Modals/SavePositionModal";
 import { weatherConditionsLocales } from "../../locales";
+import {
+  removeSavedPosition,
+  setActivePosition,
+} from "../../features/weather/slice";
 
 export function WeatherDetailInfo() {
   const [isOpenSaveModal, setIsOpenSaveModal] = useState(false);
+  const dispatch = useAppDispatch();
   const wheatherData = useAppSelector(selectWeatherData);
+  const activePosition = useAppSelector(selectActivePosition);
+  const currentUserPosition = useAppSelector(selectCurrentUserPosition);
 
   if (!wheatherData) {
     return null;
   }
   const { fact, info, geo_object, now_dt } = wheatherData;
 
-  const positionName = `${geo_object.country.name}, ${geo_object.locality.name}`;
+  const isSaved = activePosition && "name" in activePosition;
+
+  console.log("activePosition", activePosition);
+  const positionName = `${
+    isSaved
+      ? activePosition.name
+      : `${activePosition?.lat} / ${activePosition?.lon}`
+  }`;
+
+  const removeSavedHandler = () => {
+    if (!isSaved) {
+      return;
+    }
+    dispatch(removeSavedPosition(activePosition));
+    dispatch(setActivePosition(currentUserPosition));
+  };
 
   return (
     <div className="flex flex-col">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between pb-6">
         <h2 className="text-2xl font-extrabold">{positionName}</h2>
-        <Button onClick={() => setIsOpenSaveModal(true)}>
-          Сохранить текущую позицию
-        </Button>
+        <div className="flex items-center">
+          {isSaved && (
+            <Button danger={true} onClick={removeSavedHandler} className="mr-2">
+              Удалить
+            </Button>
+          )}
+          <Button onClick={() => setIsOpenSaveModal(true)}>
+            {isSaved ? "Изменить" : "Сохранить"}
+          </Button>
+        </div>
       </div>
       {isOpenSaveModal && (
         <SavePositionModal
@@ -31,6 +64,10 @@ export function WeatherDetailInfo() {
         />
       )}
       <ul className="text-lg">
+        <WeatherDetailInfoItem
+          name="Место"
+          value={`${geo_object.country.name}, ${geo_object.locality.name}`}
+        />
         <WeatherDetailInfoItem
           name="Широта и долгота"
           value={`${info.lat} / ${info.lon}`}

@@ -9,10 +9,10 @@ export function LoadingErrorModal() {
       open={isOpen}
       centered={true}
       cancelButtonProps={{
-        hidden: true,
+        className: "!hidden",
       }}
       okButtonProps={{
-        hidden: true,
+        className: "!hidden",
       }}
       closable={true}
       onCancel={() => setIsOpen(false)}

@@ -39,16 +39,37 @@ export const weatherSlice = createSlice({
     savePosition: (state, action: PayloadAction<SavedWeatherPosition>) => {
       state.savedPositions.push(action.payload);
     },
+    updatePositionName: (
+      state,
+      action: PayloadAction<SavedWeatherPosition>
+    ) => {
+      state.savedPositions = state.savedPositions.map((position) => {
+        if (position.id === action.payload.id) {
+          return action.payload;
+        }
+        return position;
+      });
+    },
+    removeSavedPosition: (
+      state,
+      action: PayloadAction<SavedWeatherPosition>
+    ) => {
+      state.savedPositions = state.savedPositions.filter(
+        (position) => position.id !== action.payload.id
+      );
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchWeatherByCoords.pending, (state) => {
       state.loadingState = LoadingState.loading;
+      state.weatherData = null;
     });
     builder.addCase(fetchWeatherByCoords.fulfilled, (state, action) => {
       state.loadingState = LoadingState.success;
       state.weatherData = action.payload;
     });
     builder.addCase(fetchWeatherByCoords.rejected, (state) => {
+      state.activePosition = state.currentUserPosition;
       state.loadingState = LoadingState.error;
     });
   },
@@ -59,6 +80,8 @@ export const {
   setActivePosition,
   setCurrentPosition,
   savePosition,
+  updatePositionName,
+  removeSavedPosition,
 } = weatherSlice.actions;
 
 export default weatherSlice.reducer;

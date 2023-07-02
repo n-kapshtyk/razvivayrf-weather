@@ -2,7 +2,11 @@ import { Button, Form, Input, Modal } from "antd";
 import React, { Dispatch, SetStateAction, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectActivePosition } from "../../features/weather/selectors";
-import { savePosition, setActivePosition } from "../../features/weather/slice";
+import {
+  savePosition,
+  setActivePosition,
+  updatePositionName,
+} from "../../features/weather/slice";
 
 interface SavePositionModalProps {
   initialName: string;
@@ -16,32 +20,45 @@ export function SavePositionModal({
   const dispatch = useAppDispatch();
   const activePosition = useAppSelector(selectActivePosition);
 
+  //todo
   const savePositionHandler = useCallback(
-    (values: { positionName: string }) => {
-      if (activePosition && "lat" in activePosition) {
+    ({ positionName }: { positionName: string }) => {
+      if (!activePosition) {
+        return;
+      }
+      if ("lat" in activePosition) {
         const position = {
           id: new Date().getTime(),
           coords: activePosition,
-          name: values.positionName,
+          name: positionName,
         };
         dispatch(savePosition(position));
         dispatch(setActivePosition(position));
+      } else if ("id" in activePosition) {
+        const updatedPosition = {
+          ...activePosition,
+          name: positionName,
+        };
+        dispatch(updatePositionName(updatedPosition));
+        dispatch(setActivePosition(updatedPosition));
       }
+      setIsOpenSaveModal(false);
     },
-    [dispatch, activePosition]
+    [dispatch, activePosition, setIsOpenSaveModal]
   );
 
   return (
     <Modal
+      title="Cохранить позицию"
       open={true}
       closable={true}
       onCancel={() => setIsOpenSaveModal(false)}
       centered={true}
       cancelButtonProps={{
-        hidden: true,
+        className: "!hidden",
       }}
       okButtonProps={{
-        hidden: true,
+        className: "!hidden",
       }}
     >
       <Form
@@ -54,16 +71,14 @@ export function SavePositionModal({
         <Form.Item
           label="Название"
           name="positionName"
-          rules={[{ required: true }]}
+          rules={[{ required: true, message: "" }]}
           initialValue={initialName}
         >
-          <Input />
+          <Input className="!w-full" />
         </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Сохранить позицию
-          </Button>
-        </Form.Item>
+        <Button type="primary" htmlType="submit">
+          Сохранить
+        </Button>
       </Form>
     </Modal>
   );

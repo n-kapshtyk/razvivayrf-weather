@@ -1,47 +1,68 @@
 import { Button, Form, InputNumber, Modal } from "antd";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useCallback } from "react";
+import { useAppDispatch } from "../../app/hooks";
+import { fetchWeatherByCoords } from "../../features/weather/api";
+import { PositionCoords } from "../../features/weather/types";
 
 interface AddPositionModalProps {
   setIsOpenAddModal: Dispatch<SetStateAction<boolean>>;
 }
 
 export function AddPositionModal({ setIsOpenAddModal }: AddPositionModalProps) {
+  const dispatch = useAppDispatch();
+
+  const onAddPosition = useCallback(
+    (values: PositionCoords) => {
+      dispatch(
+        fetchWeatherByCoords({
+          lat: values.lat,
+          lon: values.lon,
+        })
+      );
+      setIsOpenAddModal(false);
+    },
+    [dispatch, setIsOpenAddModal]
+  );
+
   return (
     <Modal
+      title="Поиск по координатам"
       open={true}
       closable={true}
       onCancel={() => setIsOpenAddModal(false)}
       centered={true}
       cancelButtonProps={{
-        hidden: true,
+        className: "!hidden",
       }}
       okButtonProps={{
-        hidden: true,
+        className: "!hidden",
       }}
     >
       <Form
         name="add-position"
         className="w-full"
-        onFinish={(values) => console.log("values", values)}
+        onFinish={onAddPosition}
         autoComplete="off"
         layout="vertical"
       >
-        <Form.Item label="Широта" name="latitude" rules={[{ required: true }]}>
-          <InputNumber<string> stringMode />
+        <Form.Item
+          label="Широта"
+          name="lat"
+          rules={[{ required: true, message: "" }]}
+        >
+          <InputNumber<string> stringMode className="!w-full" />
         </Form.Item>
         <Form.Item
           label="Долгота"
-          name="longitude"
-          rules={[{ required: true }]}
+          name="lon"
+          rules={[{ required: true, message: "" }]}
         >
-          <InputNumber<string> stringMode />
+          <InputNumber<string> stringMode className="!w-full" />
         </Form.Item>
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Поиск позиции
-          </Button>
-        </Form.Item>
+        <Button type="primary" htmlType="submit">
+          Поиск
+        </Button>
       </Form>
     </Modal>
   );

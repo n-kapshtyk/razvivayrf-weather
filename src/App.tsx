@@ -20,10 +20,10 @@ function App() {
   }
 
   return (
-    <Layout hasSider>
+    <Layout className="h-full !min-h-screen w-full">
       <NoPositionAccessModal />
       <Sidebar />
-      <Layout className="h-screen">
+      <Layout>
         <Content className="p-6">
           <WeatherDetail />
         </Content>
