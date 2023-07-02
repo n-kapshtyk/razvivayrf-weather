@@ -3,6 +3,8 @@ export const locales = {
     text: "Что-то пошло не так. Пожалуйста, попробуйте перезагрузить страницу",
     button: "Перезагрузить",
   },
+  myPositionMenuItem: "Мое местоположение",
+  savedMenuItems: "Сохраненные",
   addPosition: {
     title: "Поиск по координатам",
     lat: "Широта",

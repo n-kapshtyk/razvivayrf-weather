@@ -10,7 +10,7 @@ export function WeatherDetailDayInfo({ forecast }: WeatherDetailDayInfoProps) {
   const dayInfo = forecast.parts["day"];
 
   return (
-    <div>
+    <ul className="text-sm md:text-base">
       <WeatherDetailDayInfoItem
         name={locales.weather.dayInfo.minTemp}
         value={`${dayInfo.temp_min}℃`}
@@ -43,7 +43,7 @@ export function WeatherDetailDayInfo({ forecast }: WeatherDetailDayInfoProps) {
         name={locales.weather.dayInfo.humidity}
         value={`${dayInfo.humidity}%`}
       />
-    </div>
+    </ul>
   );
 }
 
@@ -57,7 +57,7 @@ function WeatherDetailDayInfoItem({
   value,
 }: WeatherDetailDayInfoItemProps) {
   return (
-    <li className="text-base space-x-2">
+    <li className="space-x-2">
       <span className="font-medium">{name}:</span>
       <span>{value}</span>
     </li>

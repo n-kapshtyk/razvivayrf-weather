@@ -12,6 +12,7 @@ export function NoPositionAccessModal() {
       title={locales.noPositionAccessModal.title}
       open={!hasAccess}
       centered={true}
+      closable={false}
       cancelButtonProps={{
         className: "!hidden",
       }}

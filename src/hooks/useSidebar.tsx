@@ -7,6 +7,12 @@ import {
 } from "../features/weather/selectors";
 import { setActivePosition } from "../features/weather/slice";
 import { fetchWeatherByCoords } from "../features/weather/api";
+import { locales } from "../locales";
+import {
+  PositionCoords,
+  SavedWeatherPosition,
+} from "../features/weather/types";
+import { getIsNoSavedPosition, getIsSavedPosition } from "../utils/helpers";
 
 export function useSidebar() {
   const dispatch = useAppDispatch();
@@ -15,75 +21,38 @@ export function useSidebar() {
   const activePosition = useAppSelector(selectActivePosition);
   const savedPositions = useAppSelector(selectSavedPositions);
 
-  //todo
-  const activeId = useMemo(() => {
-    return !!activePosition && "id" in activePosition
-      ? activePosition.id
-      : !!activePosition &&
-        "lat" in activePosition &&
-        activePosition.lat !== currentUserPosition?.lat &&
-        activePosition.lon !== currentUserPosition?.lon
-      ? `${activePosition.lat}${activePosition.lon}`
-      : "current";
-  }, [activePosition, currentUserPosition]);
-
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
 
   const setCurrentPositionAsActive = useCallback(() => {
-    dispatch(setActivePosition(currentUserPosition));
+    if (currentUserPosition) {
+      dispatch(setActivePosition(currentUserPosition));
+      dispatch(fetchWeatherByCoords(currentUserPosition));
+    }
   }, [currentUserPosition, dispatch]);
 
-  //todo
   const menuItems = useMemo(() => {
-    const savedList =
-      savedPositions.length > 0
-        ? [
-            {
-              key: "saved",
-              label: "Сохраненные",
-              type: "group",
-            },
-            ...savedPositions.map((position) => ({
-              key: String(position.id),
-              label: position.name,
-              onClick: () => {
-                dispatch(setActivePosition(position));
-                dispatch(
-                  fetchWeatherByCoords({
-                    lat: position.coords.lat,
-                    lon: position.coords.lon,
-                  })
-                );
-              },
-            })),
-          ]
-        : [];
+    const savedList = getSavedMenuItems({
+      savedPositions,
+      onItemClick: (position) => {
+        dispatch(setActivePosition(position));
+        dispatch(
+          fetchWeatherByCoords({
+            lat: position.coords.lat,
+            lon: position.coords.lon,
+          })
+        );
+      },
+    });
 
-    const activeSearchPosition =
-      !!activePosition &&
-      "lat" in activePosition &&
-      activePosition.lat !== currentUserPosition?.lat &&
-      activePosition.lon !== currentUserPosition?.lon
-        ? [
-            {
-              key: `${activePosition.lat}${activePosition.lon}`,
-              label: `${activePosition.lat} / ${activePosition.lon}`,
-              onClick: () => {
-                dispatch(
-                  fetchWeatherByCoords({
-                    lat: activePosition.lat,
-                    lon: activePosition.lon,
-                  })
-                );
-              },
-            },
-          ]
-        : [];
+    const activeSearchPosition = getActiveSearchMenuItem({
+      activePosition,
+      currentUserPosition,
+    });
 
     return [
       {
         key: "current",
-        label: "Мое местоположение",
+        label: locales.myPositionMenuItem,
         onClick: setCurrentPositionAsActive,
       },
       ...activeSearchPosition,
@@ -97,10 +66,79 @@ export function useSidebar() {
     currentUserPosition,
   ]);
 
+  const activeId = useMemo(() => {
+    if (getIsSavedPosition(activePosition)) {
+      return activePosition.id;
+    }
+    if (
+      getIsNoSavedPosition(activePosition) &&
+      activePosition.lat !== currentUserPosition?.lat &&
+      activePosition.lon !== currentUserPosition?.lon
+    ) {
+      return `${activePosition.lat}${activePosition.lon}`;
+    }
+    return "current";
+  }, [activePosition, currentUserPosition]);
+
   return {
     activeId,
     isOpenAddModal,
     setIsOpenAddModal,
     menuItems,
   };
+}
+
+interface GetSavedMenuItemsProps {
+  savedPositions: SavedWeatherPosition[];
+  onItemClick: (position: SavedWeatherPosition) => void;
+}
+
+function getSavedMenuItems({
+  onItemClick,
+  savedPositions,
+}: GetSavedMenuItemsProps) {
+  if (savedPositions.length === 0) {
+    return [];
+  }
+  return [
+    {
+      key: "saved",
+      label: locales.savedMenuItems,
+      type: "group",
+    },
+    ...savedPositions.map((position) => ({
+      key: String(position.id),
+      label: position.name,
+      onClick: () => {
+        onItemClick(position);
+      },
+    })),
+  ];
+}
+
+interface GetActiveSearchMenuItemProps {
+  activePosition: SavedWeatherPosition | PositionCoords | null;
+  currentUserPosition: PositionCoords | null;
+}
+
+function getActiveSearchMenuItem({
+  activePosition,
+  currentUserPosition,
+}: GetActiveSearchMenuItemProps) {
+  if (
+    !activePosition ||
+    !getIsNoSavedPosition(activePosition) ||
+    !currentUserPosition
+  ) {
+    return [];
+  }
+  return activePosition.lat !== currentUserPosition?.lat &&
+    activePosition.lon !== currentUserPosition?.lon
+    ? [
+        {
+          key: `${activePosition.lat}${activePosition.lon}`,
+          label: `${activePosition.lat} / ${activePosition.lon}`,
+        },
+      ]
+    : [];
 }

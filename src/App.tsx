@@ -5,10 +5,13 @@ import { WeatherDetail } from "./components/WeatherDetail/WeatherDetail";
 import { NoPositionAccessModal } from "./components/Modals/NoPositionAccessModal";
 import { LoadingScreen } from "./components/LoadingScreen";
 import { usePositionInitialize } from "./hooks/usePositionInitialize";
+import { useAppSelector } from "./app/hooks";
+import { selectHasGeopositionAccess } from "./features/weather/selectors";
 
 const { Content } = Layout;
 
 function App() {
+  const hasAccess = useAppSelector(selectHasGeopositionAccess);
   const { isInitialized } = usePositionInitialize();
 
   if (!isInitialized) {
@@ -22,12 +25,16 @@ function App() {
   return (
     <Layout className="h-full !min-h-screen w-full">
       <NoPositionAccessModal />
-      <Sidebar />
-      <Layout>
-        <Content className="p-6">
-          <WeatherDetail />
-        </Content>
-      </Layout>
+      {hasAccess && (
+        <>
+          <Sidebar />
+          <Layout>
+            <Content className="p-6">
+              <WeatherDetail />
+            </Content>
+          </Layout>
+        </>
+      )}
     </Layout>
   );
 }

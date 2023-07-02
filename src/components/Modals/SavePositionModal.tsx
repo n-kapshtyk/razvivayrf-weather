@@ -8,6 +8,7 @@ import {
   updatePositionName,
 } from "../../features/weather/slice";
 import { locales } from "../../locales";
+import { getIsNoSavedPosition, getIsSavedPosition } from "../../utils/helpers";
 
 interface SavePositionModalProps {
   initialName: string;
@@ -21,13 +22,12 @@ export function SavePositionModal({
   const dispatch = useAppDispatch();
   const activePosition = useAppSelector(selectActivePosition);
 
-  //todo
   const savePositionHandler = useCallback(
     ({ positionName }: { positionName: string }) => {
       if (!activePosition) {
         return;
       }
-      if ("lat" in activePosition) {
+      if (getIsNoSavedPosition(activePosition)) {
         const position = {
           id: new Date().getTime(),
           coords: activePosition,
@@ -35,7 +35,7 @@ export function SavePositionModal({
         };
         dispatch(savePosition(position));
         dispatch(setActivePosition(position));
-      } else if ("id" in activePosition) {
+      } else if (getIsSavedPosition(activePosition)) {
         const updatedPosition = {
           ...activePosition,
           name: positionName,
