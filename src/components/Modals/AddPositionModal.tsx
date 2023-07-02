@@ -3,6 +3,7 @@ import React, { Dispatch, SetStateAction, useCallback } from "react";
 import { useAppDispatch } from "../../app/hooks";
 import { fetchWeatherByCoords } from "../../features/weather/api";
 import { PositionCoords } from "../../features/weather/types";
+import { setActivePosition } from "../../features/weather/slice";
 
 interface AddPositionModalProps {
   setIsOpenAddModal: Dispatch<SetStateAction<boolean>>;
@@ -13,13 +14,13 @@ export function AddPositionModal({ setIsOpenAddModal }: AddPositionModalProps) {
 
   const onAddPosition = useCallback(
     (values: PositionCoords) => {
-      dispatch(
-        fetchWeatherByCoords({
-          lat: values.lat,
-          lon: values.lon,
-        })
-      );
+      const coords = {
+        lat: values.lat,
+        lon: values.lon,
+      };
+      dispatch(fetchWeatherByCoords(coords));
       setIsOpenAddModal(false);
+      dispatch(setActivePosition(coords));
     },
     [dispatch, setIsOpenAddModal]
   );

@@ -32,7 +32,6 @@ export function useSidebar() {
   const setCurrentPositionAsActive = useCallback(() => {
     dispatch(setActivePosition(currentUserPosition));
   }, [currentUserPosition, dispatch]);
-  console.log("activeId", activeId);
 
   //todo
   const menuItems = useMemo(() => {
